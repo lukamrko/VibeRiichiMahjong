@@ -1,0 +1,33 @@
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Node
+node_modules/
+dist/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# Vision data / models (large; not in git)
+vision/data/
+vision/runs/
+*.pt
+*.onnx
+
+# Go
+bin/
+
+# Local Claude settings
+.claude/settings.local.json
