@@ -7,7 +7,7 @@
   - area: `area:backend`, `area:frontend`, `area:vision`, `area:infra`, `area:docs`
   - type: `type:feature`, `type:decision`, `type:research`, `type:bug`, `type:chore`
 - **Milestones**: `M1 Backend`, `M2 Frontend`, `M3 Vision`, `M4 Deploy`.
-- **Project board**: "VibeRiichiMahjong" (Todo → In progress → Done).
+- **Project board**: [VibeRiichiMahjong](https://github.com/users/lukamrko/projects/1) (Todo → In progress → Done). Add every new issue to it.
 - `type:decision` issues end in an ADR under `docs/adr/`.
 
 ## Branches and PRs

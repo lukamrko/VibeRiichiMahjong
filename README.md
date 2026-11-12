@@ -22,7 +22,7 @@ Plan: backend first, then frontend, then vision, then Docker-based deployment.
 - [Workflow](docs/workflow.md)
 - [Agent instructions](AGENTS.md)
 
-Planning and tickets live in GitHub Issues, Milestones and the project board.
+Planning and tickets live in GitHub Issues, Milestones and the [project board](https://github.com/users/lukamrko/projects/1).
 
 ## License
 
