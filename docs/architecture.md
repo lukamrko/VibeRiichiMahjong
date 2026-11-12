@@ -5,12 +5,12 @@
 ```
 ┌──────────┐   image + context    ┌──────────┐    image     ┌──────────┐
 │ frontend │ ───────────────────▶ │ backend  │ ───────────▶ │  vision  │
-│ React/TS │ ◀─────────────────── │ scoring  │ ◀─────────── │ Python   │
+│ React/TS │ ◀─────────────────── │ Go       │ ◀─────────── │ Python   │
 └──────────┘  tiles / score       └──────────┘  detections  └──────────┘
 ```
 
 - **frontend** talks only to **backend**.
-- **backend** owns the public API and the scoring engine; it calls **vision** internally.
+- **backend** (Go, standard library first; ADR-0005) owns the public API and the scoring engine. It calls **vision** internally.
 - **vision** is a separate Python HTTP service so the backend language is free to choose (ADR-0002, ADR-0004).
 - Each component ships as its own Docker image; local dev and deployment use `docker compose` (later milestone).
 

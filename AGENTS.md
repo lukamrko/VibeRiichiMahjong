@@ -15,7 +15,7 @@ traceability and good tests over cleverness or speed.
 
 | Path | What | Status |
 |---|---|---|
-| `backend/` | Scoring engine + public HTTP API. Language **not yet decided** (see ADR-0002 / the backend-language issue). | not started |
+| `backend/` | Scoring engine + public HTTP API. **Go**, standard library first (ADR-0005). | not started |
 | `frontend/` | React + TypeScript + Vite SPA: upload/camera, tile correction, game-context form, score breakdown. | not started |
 | `vision/` | Python service: image in → detected tiles out (fine-tuned YOLO). | not started |
 | `fixtures/hands/` | Language-agnostic test fixtures: hands with expected yaku/han/fu/points. Shared by all components. | not started |
@@ -49,6 +49,17 @@ Build order: **backend (scoring) → frontend → vision → deployment (Docker)
 - Commit messages: Conventional Commits (`feat(backend): …`, `test(fixtures): …`, `docs: …`, `chore(ci): …`).
 - Domain names in code follow the glossary (`Hand`, `Tile`, `Meld`, `Yaku`, `Han`, `Fu`, `WinContext`, …).
 - Per-component build/test commands will be added here as each component is scaffolded.
+
+### Go (backend)
+
+- **Standard library first** (ADR-0005): `net/http` (no router framework), `testing` with table-driven tests
+  (no testify or other assertion library), `encoding/json`, `log/slog`. Adding any third-party module needs a short
+  justification in the PR description. Don't reach for gin/echo/chi/testify out of habit.
+- Code must pass `gofmt`, `go vet` and `golangci-lint`. Tests run with `go test ./...`.
+- Go has no sum types or real enums. Model domain kinds as typed constants with validating constructors, and make
+  `switch` statements over them handle every case explicitly.
+- Go tests read `fixtures/hands/` directly and never call Python. The Python `mahjong` oracle lives only in
+  `tools/oracle/` as a separate cross-check.
 
 ## Commands
 
