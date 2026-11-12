@@ -66,6 +66,11 @@ The scoring endpoint must work **without** vision (tiles typed in directly) — 
 ```
 When several decompositions of a hand are possible, the engine returns the **highest-scoring** one.
 
+`points` keys depend on the win, and every value includes honba (riichi sticks are not included):
+ron → `{total, fromDiscarder}`; non-dealer tsumo → `{total, fromDealer, fromNonDealer}`;
+dealer tsumo → `{total, fromEachNonDealer}`. For yakuman hands `fu` is `null` and `fuBreakdown` is empty.
+Yaku ids, fu reasons and limit names are the closed vocabularies in [fixtures/hands/README.md](../fixtures/hands/README.md).
+
 ## Testing layers
 
 - **Unit**: tile parsing, hand decomposition, each yaku, fu, point table.

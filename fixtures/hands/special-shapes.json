@@ -1,0 +1,119 @@
+[
+  {
+    "id": "chiitoitsu-riichi-ura",
+    "description": "Riichi chiitoitsu, tanki on hatsu; ura indicator haku makes both hatsu ura dora. Mangan.",
+    "input": {
+      "hand": "1133m2255p4477s66z",
+      "winningTile": "6z",
+      "context": {
+        "roundWind": "1z",
+        "seatWind": "2z",
+        "winType": "ron",
+        "riichi": true,
+        "doubleRiichi": false,
+        "ippatsu": false,
+        "doraIndicators": [
+          "1z"
+        ],
+        "uraDoraIndicators": [
+          "5z"
+        ],
+        "honba": 0,
+        "haitei": false,
+        "houtei": false,
+        "rinshan": false,
+        "chankan": false,
+        "tenhou": false,
+        "chiihou": false
+      }
+    },
+    "expected": {
+      "yaku": [
+        {
+          "name": "riichi",
+          "han": 1
+        },
+        {
+          "name": "chiitoitsu",
+          "han": 2
+        }
+      ],
+      "dora": 0,
+      "akaDora": 0,
+      "uraDora": 2,
+      "han": 5,
+      "fu": 25,
+      "fuBreakdown": [
+        {
+          "reason": "chiitoitsu",
+          "fu": 25
+        }
+      ],
+      "limit": "mangan",
+      "points": {
+        "total": 8000,
+        "fromDiscarder": 8000
+      }
+    }
+  },
+  {
+    "id": "chiitoitsu-tanyao-tsumo",
+    "description": "Chiitoitsu + tanyao + menzen tsumo: 4 han 25 fu.",
+    "input": {
+      "hand": "2244m3366p557788s",
+      "winningTile": "8s",
+      "context": {
+        "roundWind": "1z",
+        "seatWind": "2z",
+        "winType": "tsumo",
+        "riichi": false,
+        "doubleRiichi": false,
+        "ippatsu": false,
+        "doraIndicators": [
+          "1z"
+        ],
+        "uraDoraIndicators": [],
+        "honba": 0,
+        "haitei": false,
+        "houtei": false,
+        "rinshan": false,
+        "chankan": false,
+        "tenhou": false,
+        "chiihou": false
+      }
+    },
+    "expected": {
+      "yaku": [
+        {
+          "name": "menzen_tsumo",
+          "han": 1
+        },
+        {
+          "name": "tanyao",
+          "han": 1
+        },
+        {
+          "name": "chiitoitsu",
+          "han": 2
+        }
+      ],
+      "dora": 0,
+      "akaDora": 0,
+      "uraDora": 0,
+      "han": 4,
+      "fu": 25,
+      "fuBreakdown": [
+        {
+          "reason": "chiitoitsu",
+          "fu": 25
+        }
+      ],
+      "limit": null,
+      "points": {
+        "total": 6400,
+        "fromDealer": 3200,
+        "fromNonDealer": 1600
+      }
+    }
+  }
+]

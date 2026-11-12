@@ -1,0 +1,727 @@
+[
+  {
+    "id": "kazoe-yakuman",
+    "description": "Riichi ippatsu tsumo pinfu tanyao iipeikou chinitsu + 3 dora = 15 han -> kazoe yakuman.",
+    "input": {
+      "hand": "22334456677888p",
+      "winningTile": "5p",
+      "context": {
+        "roundWind": "1z",
+        "seatWind": "2z",
+        "winType": "tsumo",
+        "riichi": true,
+        "doubleRiichi": false,
+        "ippatsu": true,
+        "doraIndicators": [
+          "7p"
+        ],
+        "uraDoraIndicators": [
+          "1z"
+        ],
+        "honba": 0,
+        "haitei": false,
+        "houtei": false,
+        "rinshan": false,
+        "chankan": false,
+        "tenhou": false,
+        "chiihou": false
+      }
+    },
+    "expected": {
+      "yaku": [
+        {
+          "name": "riichi",
+          "han": 1
+        },
+        {
+          "name": "ippatsu",
+          "han": 1
+        },
+        {
+          "name": "menzen_tsumo",
+          "han": 1
+        },
+        {
+          "name": "pinfu",
+          "han": 1
+        },
+        {
+          "name": "tanyao",
+          "han": 1
+        },
+        {
+          "name": "iipeikou",
+          "han": 1
+        },
+        {
+          "name": "chinitsu",
+          "han": 6
+        }
+      ],
+      "dora": 3,
+      "akaDora": 0,
+      "uraDora": 0,
+      "han": 15,
+      "fu": 20,
+      "fuBreakdown": [
+        {
+          "reason": "base",
+          "fu": 20
+        }
+      ],
+      "limit": "kazoe_yakuman",
+      "points": {
+        "total": 32000,
+        "fromDealer": 16000,
+        "fromNonDealer": 8000
+      }
+    }
+  },
+  {
+    "id": "suuankou-tsumo",
+    "description": "Four concealed triplets completed by tsumo on a shanpon wait.",
+    "input": {
+      "hand": "22233m444p666888s",
+      "winningTile": "8s",
+      "context": {
+        "roundWind": "1z",
+        "seatWind": "2z",
+        "winType": "tsumo",
+        "riichi": false,
+        "doubleRiichi": false,
+        "ippatsu": false,
+        "doraIndicators": [
+          "1z"
+        ],
+        "uraDoraIndicators": [],
+        "honba": 0,
+        "haitei": false,
+        "houtei": false,
+        "rinshan": false,
+        "chankan": false,
+        "tenhou": false,
+        "chiihou": false
+      }
+    },
+    "expected": {
+      "yaku": [
+        {
+          "name": "suuankou",
+          "han": 13
+        }
+      ],
+      "dora": 0,
+      "akaDora": 0,
+      "uraDora": 0,
+      "han": 13,
+      "fu": null,
+      "fuBreakdown": [],
+      "limit": "yakuman",
+      "points": {
+        "total": 32000,
+        "fromDealer": 16000,
+        "fromNonDealer": 8000
+      }
+    }
+  },
+  {
+    "id": "suuankou-tanki-double",
+    "description": "Suuankou on a tanki wait counts as double yakuman.",
+    "input": {
+      "hand": "22233m444p666888s",
+      "winningTile": "3m",
+      "context": {
+        "roundWind": "1z",
+        "seatWind": "2z",
+        "winType": "ron",
+        "riichi": false,
+        "doubleRiichi": false,
+        "ippatsu": false,
+        "doraIndicators": [
+          "1z"
+        ],
+        "uraDoraIndicators": [],
+        "honba": 0,
+        "haitei": false,
+        "houtei": false,
+        "rinshan": false,
+        "chankan": false,
+        "tenhou": false,
+        "chiihou": false
+      }
+    },
+    "expected": {
+      "yaku": [
+        {
+          "name": "suuankou_tanki",
+          "han": 26
+        }
+      ],
+      "dora": 0,
+      "akaDora": 0,
+      "uraDora": 0,
+      "han": 26,
+      "fu": null,
+      "fuBreakdown": [],
+      "limit": "double_yakuman",
+      "points": {
+        "total": 64000,
+        "fromDiscarder": 64000
+      }
+    }
+  },
+  {
+    "id": "kokushi-dealer-ron",
+    "description": "Kokushi musou, single wait on west (1m is the pair). Dealer ron.",
+    "input": {
+      "hand": "119m19p19s1234567z",
+      "winningTile": "3z",
+      "context": {
+        "roundWind": "1z",
+        "seatWind": "1z",
+        "winType": "ron",
+        "riichi": false,
+        "doubleRiichi": false,
+        "ippatsu": false,
+        "doraIndicators": [
+          "1z"
+        ],
+        "uraDoraIndicators": [],
+        "honba": 0,
+        "haitei": false,
+        "houtei": false,
+        "rinshan": false,
+        "chankan": false,
+        "tenhou": false,
+        "chiihou": false
+      }
+    },
+    "expected": {
+      "yaku": [
+        {
+          "name": "kokushi_musou",
+          "han": 13
+        }
+      ],
+      "dora": 0,
+      "akaDora": 0,
+      "uraDora": 0,
+      "han": 13,
+      "fu": null,
+      "fuBreakdown": [],
+      "limit": "yakuman",
+      "points": {
+        "total": 48000,
+        "fromDiscarder": 48000
+      }
+    }
+  },
+  {
+    "id": "kokushi-13-wait-double",
+    "description": "Kokushi musou 13-sided wait (winning tile is the pair tile) = double yakuman.",
+    "input": {
+      "hand": "119m19p19s1234567z",
+      "winningTile": "1m",
+      "context": {
+        "roundWind": "1z",
+        "seatWind": "2z",
+        "winType": "tsumo",
+        "riichi": false,
+        "doubleRiichi": false,
+        "ippatsu": false,
+        "doraIndicators": [
+          "1z"
+        ],
+        "uraDoraIndicators": [],
+        "honba": 0,
+        "haitei": false,
+        "houtei": false,
+        "rinshan": false,
+        "chankan": false,
+        "tenhou": false,
+        "chiihou": false
+      }
+    },
+    "expected": {
+      "yaku": [
+        {
+          "name": "kokushi_musou_juusanmen",
+          "han": 26
+        }
+      ],
+      "dora": 0,
+      "akaDora": 0,
+      "uraDora": 0,
+      "han": 26,
+      "fu": null,
+      "fuBreakdown": [],
+      "limit": "double_yakuman",
+      "points": {
+        "total": 64000,
+        "fromDealer": 32000,
+        "fromNonDealer": 16000
+      }
+    }
+  },
+  {
+    "id": "daisangen",
+    "description": "Daisangen, ryanmen ron.",
+    "input": {
+      "hand": "234m99p555666777z",
+      "winningTile": "4m",
+      "context": {
+        "roundWind": "1z",
+        "seatWind": "2z",
+        "winType": "ron",
+        "riichi": false,
+        "doubleRiichi": false,
+        "ippatsu": false,
+        "doraIndicators": [
+          "1z"
+        ],
+        "uraDoraIndicators": [],
+        "honba": 0,
+        "haitei": false,
+        "houtei": false,
+        "rinshan": false,
+        "chankan": false,
+        "tenhou": false,
+        "chiihou": false
+      }
+    },
+    "expected": {
+      "yaku": [
+        {
+          "name": "daisangen",
+          "han": 13
+        }
+      ],
+      "dora": 0,
+      "akaDora": 0,
+      "uraDora": 0,
+      "han": 13,
+      "fu": null,
+      "fuBreakdown": [],
+      "limit": "yakuman",
+      "points": {
+        "total": 32000,
+        "fromDiscarder": 32000
+      }
+    }
+  },
+  {
+    "id": "shousuushii",
+    "description": "Shousuushii: three wind triplets + wind pair.",
+    "input": {
+      "hand": "234m11122233344z",
+      "winningTile": "4m",
+      "context": {
+        "roundWind": "1z",
+        "seatWind": "2z",
+        "winType": "ron",
+        "riichi": false,
+        "doubleRiichi": false,
+        "ippatsu": false,
+        "doraIndicators": [
+          "1z"
+        ],
+        "uraDoraIndicators": [],
+        "honba": 0,
+        "haitei": false,
+        "houtei": false,
+        "rinshan": false,
+        "chankan": false,
+        "tenhou": false,
+        "chiihou": false
+      }
+    },
+    "expected": {
+      "yaku": [
+        {
+          "name": "shousuushii",
+          "han": 13
+        }
+      ],
+      "dora": 0,
+      "akaDora": 0,
+      "uraDora": 0,
+      "han": 13,
+      "fu": null,
+      "fuBreakdown": [],
+      "limit": "yakuman",
+      "points": {
+        "total": 32000,
+        "fromDiscarder": 32000
+      }
+    }
+  },
+  {
+    "id": "daisuushii-double",
+    "description": "Daisuushii (four wind triplets) = double yakuman. Shanpon ron, so not suuankou.",
+    "input": {
+      "hand": "55m111222333444z",
+      "winningTile": "4z",
+      "context": {
+        "roundWind": "1z",
+        "seatWind": "2z",
+        "winType": "ron",
+        "riichi": false,
+        "doubleRiichi": false,
+        "ippatsu": false,
+        "doraIndicators": [
+          "1z"
+        ],
+        "uraDoraIndicators": [],
+        "honba": 0,
+        "haitei": false,
+        "houtei": false,
+        "rinshan": false,
+        "chankan": false,
+        "tenhou": false,
+        "chiihou": false
+      }
+    },
+    "expected": {
+      "yaku": [
+        {
+          "name": "daisuushii",
+          "han": 26
+        }
+      ],
+      "dora": 0,
+      "akaDora": 0,
+      "uraDora": 0,
+      "han": 26,
+      "fu": null,
+      "fuBreakdown": [],
+      "limit": "double_yakuman",
+      "points": {
+        "total": 64000,
+        "fromDiscarder": 64000
+      }
+    }
+  },
+  {
+    "id": "tsuuiisou",
+    "description": "All honors, shanpon ron on haku (so not suuankou).",
+    "input": {
+      "hand": "11122233355566z",
+      "winningTile": "5z",
+      "context": {
+        "roundWind": "1z",
+        "seatWind": "2z",
+        "winType": "ron",
+        "riichi": false,
+        "doubleRiichi": false,
+        "ippatsu": false,
+        "doraIndicators": [
+          "1z"
+        ],
+        "uraDoraIndicators": [],
+        "honba": 0,
+        "haitei": false,
+        "houtei": false,
+        "rinshan": false,
+        "chankan": false,
+        "tenhou": false,
+        "chiihou": false
+      }
+    },
+    "expected": {
+      "yaku": [
+        {
+          "name": "tsuuiisou",
+          "han": 13
+        }
+      ],
+      "dora": 0,
+      "akaDora": 0,
+      "uraDora": 0,
+      "han": 13,
+      "fu": null,
+      "fuBreakdown": [],
+      "limit": "yakuman",
+      "points": {
+        "total": 32000,
+        "fromDiscarder": 32000
+      }
+    }
+  },
+  {
+    "id": "ryuuiisou",
+    "description": "All green: 234s 234s 666s 888s + hatsu pair.",
+    "input": {
+      "hand": "223344666888s66z",
+      "winningTile": "4s",
+      "context": {
+        "roundWind": "1z",
+        "seatWind": "2z",
+        "winType": "ron",
+        "riichi": false,
+        "doubleRiichi": false,
+        "ippatsu": false,
+        "doraIndicators": [
+          "1z"
+        ],
+        "uraDoraIndicators": [],
+        "honba": 0,
+        "haitei": false,
+        "houtei": false,
+        "rinshan": false,
+        "chankan": false,
+        "tenhou": false,
+        "chiihou": false
+      }
+    },
+    "expected": {
+      "yaku": [
+        {
+          "name": "ryuuiisou",
+          "han": 13
+        }
+      ],
+      "dora": 0,
+      "akaDora": 0,
+      "uraDora": 0,
+      "han": 13,
+      "fu": null,
+      "fuBreakdown": [],
+      "limit": "yakuman",
+      "points": {
+        "total": 32000,
+        "fromDiscarder": 32000
+      }
+    }
+  },
+  {
+    "id": "chinroutou",
+    "description": "All terminals, shanpon ron on 9s (so not suuankou).",
+    "input": {
+      "hand": "111999m11199p999s",
+      "winningTile": "9s",
+      "context": {
+        "roundWind": "1z",
+        "seatWind": "2z",
+        "winType": "ron",
+        "riichi": false,
+        "doubleRiichi": false,
+        "ippatsu": false,
+        "doraIndicators": [
+          "1z"
+        ],
+        "uraDoraIndicators": [],
+        "honba": 0,
+        "haitei": false,
+        "houtei": false,
+        "rinshan": false,
+        "chankan": false,
+        "tenhou": false,
+        "chiihou": false
+      }
+    },
+    "expected": {
+      "yaku": [
+        {
+          "name": "chinroutou",
+          "han": 13
+        }
+      ],
+      "dora": 0,
+      "akaDora": 0,
+      "uraDora": 0,
+      "han": 13,
+      "fu": null,
+      "fuBreakdown": [],
+      "limit": "yakuman",
+      "points": {
+        "total": 32000,
+        "fromDiscarder": 32000
+      }
+    }
+  },
+  {
+    "id": "chuuren-poutou",
+    "description": "Nine gates, won on 9m (not the nine-sided wait).",
+    "input": {
+      "hand": "11123455678999m",
+      "winningTile": "9m",
+      "context": {
+        "roundWind": "1z",
+        "seatWind": "2z",
+        "winType": "ron",
+        "riichi": false,
+        "doubleRiichi": false,
+        "ippatsu": false,
+        "doraIndicators": [
+          "1z"
+        ],
+        "uraDoraIndicators": [],
+        "honba": 0,
+        "haitei": false,
+        "houtei": false,
+        "rinshan": false,
+        "chankan": false,
+        "tenhou": false,
+        "chiihou": false
+      }
+    },
+    "expected": {
+      "yaku": [
+        {
+          "name": "chuuren_poutou",
+          "han": 13
+        }
+      ],
+      "dora": 0,
+      "akaDora": 0,
+      "uraDora": 0,
+      "han": 13,
+      "fu": null,
+      "fuBreakdown": [],
+      "limit": "yakuman",
+      "points": {
+        "total": 32000,
+        "fromDiscarder": 32000
+      }
+    }
+  },
+  {
+    "id": "junsei-chuuren-double",
+    "description": "Pure nine gates: 1112345678999m waiting on all nine, won on 5m by dealer tsumo = double yakuman.",
+    "input": {
+      "hand": "11123455678999m",
+      "winningTile": "5m",
+      "context": {
+        "roundWind": "1z",
+        "seatWind": "1z",
+        "winType": "tsumo",
+        "riichi": false,
+        "doubleRiichi": false,
+        "ippatsu": false,
+        "doraIndicators": [
+          "1z"
+        ],
+        "uraDoraIndicators": [],
+        "honba": 0,
+        "haitei": false,
+        "houtei": false,
+        "rinshan": false,
+        "chankan": false,
+        "tenhou": false,
+        "chiihou": false
+      }
+    },
+    "expected": {
+      "yaku": [
+        {
+          "name": "junsei_chuuren_poutou",
+          "han": 26
+        }
+      ],
+      "dora": 0,
+      "akaDora": 0,
+      "uraDora": 0,
+      "han": 26,
+      "fu": null,
+      "fuBreakdown": [],
+      "limit": "double_yakuman",
+      "points": {
+        "total": 96000,
+        "fromEachNonDealer": 32000
+      }
+    }
+  },
+  {
+    "id": "tenhou",
+    "description": "Dealer wins on the initial deal.",
+    "input": {
+      "hand": "123456789m234p55s",
+      "winningTile": "5s",
+      "context": {
+        "roundWind": "1z",
+        "seatWind": "1z",
+        "winType": "tsumo",
+        "riichi": false,
+        "doubleRiichi": false,
+        "ippatsu": false,
+        "doraIndicators": [
+          "1z"
+        ],
+        "uraDoraIndicators": [],
+        "honba": 0,
+        "haitei": false,
+        "houtei": false,
+        "rinshan": false,
+        "chankan": false,
+        "tenhou": true,
+        "chiihou": false
+      }
+    },
+    "expected": {
+      "yaku": [
+        {
+          "name": "tenhou",
+          "han": 13
+        }
+      ],
+      "dora": 0,
+      "akaDora": 0,
+      "uraDora": 0,
+      "han": 13,
+      "fu": null,
+      "fuBreakdown": [],
+      "limit": "yakuman",
+      "points": {
+        "total": 48000,
+        "fromEachNonDealer": 16000
+      }
+    }
+  },
+  {
+    "id": "chiihou",
+    "description": "Non-dealer wins on the first draw.",
+    "input": {
+      "hand": "123456789m234p55s",
+      "winningTile": "5s",
+      "context": {
+        "roundWind": "1z",
+        "seatWind": "2z",
+        "winType": "tsumo",
+        "riichi": false,
+        "doubleRiichi": false,
+        "ippatsu": false,
+        "doraIndicators": [
+          "1z"
+        ],
+        "uraDoraIndicators": [],
+        "honba": 0,
+        "haitei": false,
+        "houtei": false,
+        "rinshan": false,
+        "chankan": false,
+        "tenhou": false,
+        "chiihou": true
+      }
+    },
+    "expected": {
+      "yaku": [
+        {
+          "name": "chiihou",
+          "han": 13
+        }
+      ],
+      "dora": 0,
+      "akaDora": 0,
+      "uraDora": 0,
+      "han": 13,
+      "fu": null,
+      "fuBreakdown": [],
+      "limit": "yakuman",
+      "points": {
+        "total": 32000,
+        "fromDealer": 16000,
+        "fromNonDealer": 8000
+      }
+    }
+  }
+]
