@@ -25,8 +25,9 @@ There are 34 distinct tile kinds (37 with red fives as separate detection classe
 | **Winning tile** | The tile that completed the hand (agari-hai). Affects fu and some yaku (pinfu, wait type). |
 | **Meld / Set (mentsu)** | Sequence (shuntsu, e.g. `345p`) or triplet (koutsu, e.g. `777s`). Kan = quad. |
 | **Pair (jantou)** | Two identical tiles. |
-| **Decomposition** | One way of splitting a hand into 4 sets + pair (or 7 pairs / kokushi). A hand can have several. |
-| **Wait (machi)** | Shape the winning tile completed: ryanmen, kanchan, penchan, shanpon, tanki. |
+| **Decomposition** | One way of splitting a hand into 4 sets + pair (or 7 pairs / kokushi), plus which group the winning tile completed. A hand can have several; scoring keeps the highest. |
+| **Form** | Overall shape of a winning hand: `standard` (4 sets + pair), `chiitoitsu` (7 distinct pairs; four of a kind is not two pairs), `kokushi`. |
+| **Wait (machi)** | Shape the winning tile completed: ryanmen, kanchan, penchan, shanpon, tanki. Chiitoitsu is always tanki; kokushi is tanki, or **juusanmen** (13-sided) when the winning tile completed the pair. |
 | **Yaku** | A scoring pattern; a hand needs ≥1 yaku (dora don't count) to win. |
 | **Han** | Doubling units from yaku and dora. |
 | **Fu** | Minipoints from hand composition and wait. |

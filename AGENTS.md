@@ -15,7 +15,7 @@ traceability and good tests over cleverness or speed.
 
 | Path | What | Status |
 |---|---|---|
-| `backend/` | Scoring engine + public HTTP API. **Go**, standard library first (ADR-0005). | not started |
+| `backend/` | Scoring engine + public HTTP API. **Go**, standard library first (ADR-0005). | in progress |
 | `frontend/` | React + TypeScript + Vite SPA: upload/camera, tile correction, game-context form, score breakdown. | not started |
 | `vision/` | Python service: image in → detected tiles out (fine-tuned YOLO). | not started |
 | `fixtures/hands/` | Language-agnostic test fixtures: hands with expected yaku/han/fu/points. Shared by all components. | active |
@@ -64,7 +64,14 @@ Build order: **backend (scoring) → frontend → vision → deployment (Docker)
 
 ## Commands
 
-_Components are not scaffolded yet. Add `build`, `test`, `lint`, `run` commands per component here when they exist._
+_Add `build`, `test`, `lint`, `run` commands per component here as each one is scaffolded._
+
+- **Backend** (run from `backend/`; module `github.com/lukamrko/VibeRiichiMahjong/backend`, Go 1.25):
+  - test: `go test ./...` (also reads `fixtures/hands/`)
+  - format / vet: `gofmt -l .` (must print nothing), `go vet ./...`
+  - lint: `golangci-lint run`
+  - packages: `internal/tile` (Tile, Kind, Suit, MPSZ parsing), `internal/hand` (Hand validation,
+    decompositions, wait types). Scoring (#4) builds on top of these.
 
 - **Fixture oracle check** (run after any change to `fixtures/hands/`; see its README):
   `python -m venv tools/oracle/.venv && tools/oracle/.venv/Scripts/python -m pip install -r tools/oracle/requirements.txt`,
