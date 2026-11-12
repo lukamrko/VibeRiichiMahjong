@@ -1,0 +1,260 @@
+[
+  {
+    "id": "double-riichi-ippatsu-tsumo",
+    "description": "Double riichi + ippatsu + menzen tsumo + pinfu = 5 han, mangan.",
+    "input": {
+      "hand": "123m45699p345678s",
+      "winningTile": "6s",
+      "context": {
+        "roundWind": "1z",
+        "seatWind": "2z",
+        "winType": "tsumo",
+        "riichi": true,
+        "doubleRiichi": true,
+        "ippatsu": true,
+        "doraIndicators": [
+          "1z"
+        ],
+        "uraDoraIndicators": [
+          "7z"
+        ],
+        "honba": 0,
+        "haitei": false,
+        "houtei": false,
+        "rinshan": false,
+        "chankan": false,
+        "tenhou": false,
+        "chiihou": false
+      }
+    },
+    "expected": {
+      "yaku": [
+        {
+          "name": "double_riichi",
+          "han": 2
+        },
+        {
+          "name": "ippatsu",
+          "han": 1
+        },
+        {
+          "name": "menzen_tsumo",
+          "han": 1
+        },
+        {
+          "name": "pinfu",
+          "han": 1
+        }
+      ],
+      "dora": 0,
+      "akaDora": 0,
+      "uraDora": 0,
+      "han": 5,
+      "fu": 20,
+      "fuBreakdown": [
+        {
+          "reason": "base",
+          "fu": 20
+        }
+      ],
+      "limit": "mangan",
+      "points": {
+        "total": 8000,
+        "fromDealer": 4000,
+        "fromNonDealer": 2000
+      }
+    }
+  },
+  {
+    "id": "haitei-riichi-tsumo-no-kiriage",
+    "description": "Riichi + tsumo + haitei + 1 dora = 4 han 30 fu tsumo (no kiriage).",
+    "input": {
+      "hand": "456678m123p23455s",
+      "winningTile": "3p",
+      "context": {
+        "roundWind": "1z",
+        "seatWind": "2z",
+        "winType": "tsumo",
+        "riichi": true,
+        "doubleRiichi": false,
+        "ippatsu": false,
+        "doraIndicators": [
+          "4m"
+        ],
+        "uraDoraIndicators": [
+          "1z"
+        ],
+        "honba": 0,
+        "haitei": true,
+        "houtei": false,
+        "rinshan": false,
+        "chankan": false,
+        "tenhou": false,
+        "chiihou": false
+      }
+    },
+    "expected": {
+      "yaku": [
+        {
+          "name": "riichi",
+          "han": 1
+        },
+        {
+          "name": "menzen_tsumo",
+          "han": 1
+        },
+        {
+          "name": "haitei",
+          "han": 1
+        }
+      ],
+      "dora": 1,
+      "akaDora": 0,
+      "uraDora": 0,
+      "han": 4,
+      "fu": 30,
+      "fuBreakdown": [
+        {
+          "reason": "base",
+          "fu": 20
+        },
+        {
+          "reason": "tsumo",
+          "fu": 2
+        },
+        {
+          "reason": "wait_penchan",
+          "fu": 2
+        }
+      ],
+      "limit": null,
+      "points": {
+        "total": 7900,
+        "fromDealer": 3900,
+        "fromNonDealer": 2000
+      }
+    }
+  },
+  {
+    "id": "houtei-tanyao",
+    "description": "Houtei + tanyao, kanchan ron. 2 han 40 fu.",
+    "input": {
+      "hand": "234m345678p45688s",
+      "winningTile": "5s",
+      "context": {
+        "roundWind": "1z",
+        "seatWind": "2z",
+        "winType": "ron",
+        "riichi": false,
+        "doubleRiichi": false,
+        "ippatsu": false,
+        "doraIndicators": [
+          "7z"
+        ],
+        "uraDoraIndicators": [],
+        "honba": 0,
+        "haitei": false,
+        "houtei": true,
+        "rinshan": false,
+        "chankan": false,
+        "tenhou": false,
+        "chiihou": false
+      }
+    },
+    "expected": {
+      "yaku": [
+        {
+          "name": "tanyao",
+          "han": 1
+        },
+        {
+          "name": "houtei",
+          "han": 1
+        }
+      ],
+      "dora": 0,
+      "akaDora": 0,
+      "uraDora": 0,
+      "han": 2,
+      "fu": 40,
+      "fuBreakdown": [
+        {
+          "reason": "base",
+          "fu": 20
+        },
+        {
+          "reason": "closed_ron",
+          "fu": 10
+        },
+        {
+          "reason": "wait_kanchan",
+          "fu": 2
+        }
+      ],
+      "limit": null,
+      "points": {
+        "total": 2600,
+        "fromDiscarder": 2600
+      }
+    }
+  },
+  {
+    "id": "chankan-pinfu",
+    "description": "Chankan (robbing a kan) + pinfu. 2 han 30 fu.",
+    "input": {
+      "hand": "123m45699p345678s",
+      "winningTile": "6s",
+      "context": {
+        "roundWind": "1z",
+        "seatWind": "2z",
+        "winType": "ron",
+        "riichi": false,
+        "doubleRiichi": false,
+        "ippatsu": false,
+        "doraIndicators": [
+          "1z"
+        ],
+        "uraDoraIndicators": [],
+        "honba": 0,
+        "haitei": false,
+        "houtei": false,
+        "rinshan": false,
+        "chankan": true,
+        "tenhou": false,
+        "chiihou": false
+      }
+    },
+    "expected": {
+      "yaku": [
+        {
+          "name": "pinfu",
+          "han": 1
+        },
+        {
+          "name": "chankan",
+          "han": 1
+        }
+      ],
+      "dora": 0,
+      "akaDora": 0,
+      "uraDora": 0,
+      "han": 2,
+      "fu": 30,
+      "fuBreakdown": [
+        {
+          "reason": "base",
+          "fu": 20
+        },
+        {
+          "reason": "closed_ron",
+          "fu": 10
+        }
+      ],
+      "limit": null,
+      "points": {
+        "total": 2000,
+        "fromDiscarder": 2000
+      }
+    }
+  }
+]

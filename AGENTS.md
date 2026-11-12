@@ -18,7 +18,8 @@ traceability and good tests over cleverness or speed.
 | `backend/` | Scoring engine + public HTTP API. **Go**, standard library first (ADR-0005). | not started |
 | `frontend/` | React + TypeScript + Vite SPA: upload/camera, tile correction, game-context form, score breakdown. | not started |
 | `vision/` | Python service: image in → detected tiles out (fine-tuned YOLO). | not started |
-| `fixtures/hands/` | Language-agnostic test fixtures: hands with expected yaku/han/fu/points. Shared by all components. | not started |
+| `fixtures/hands/` | Language-agnostic test fixtures: hands with expected yaku/han/fu/points. Shared by all components. | active |
+| `tools/oracle/` | Python script that cross-checks `fixtures/hands/` against the `mahjong` library (test oracle only). | active |
 | `docs/` | Architecture, domain glossary, ADRs, workflow. | active |
 
 Build order: **backend (scoring) → frontend → vision → deployment (Docker)**.
@@ -63,4 +64,8 @@ Build order: **backend (scoring) → frontend → vision → deployment (Docker)
 
 ## Commands
 
-_None yet — components are not scaffolded. Add `build`, `test`, `lint`, `run` commands per component here when they exist._
+_Components are not scaffolded yet. Add `build`, `test`, `lint`, `run` commands per component here when they exist._
+
+- **Fixture oracle check** (run after any change to `fixtures/hands/`; see its README):
+  `python -m venv tools/oracle/.venv && tools/oracle/.venv/Scripts/python -m pip install -r tools/oracle/requirements.txt`,
+  then `tools/oracle/.venv/Scripts/python tools/oracle/check_fixtures.py` (use `bin/` instead of `Scripts/` on Linux/macOS).
