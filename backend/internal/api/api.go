@@ -17,15 +17,19 @@ import (
 // maxBodyBytes caps the request body size.
 const maxBodyBytes = 64 << 10
 
-// Error codes returned in the error body (closed list, see docs/architecture.md).
+// ErrorCode is a machine-readable error code in an ErrorResponse (closed list,
+// see docs/architecture.md).
+type ErrorCode string
+
+// Error codes.
 const (
-	CodeInvalidJSON    = "invalid_json"
-	CodeBodyTooLarge   = "body_too_large"
-	CodeInvalidHand    = "invalid_hand"
-	CodeInvalidContext = "invalid_context"
-	CodeNotWinningHand = "not_winning_hand"
-	CodeNoYaku         = "no_yaku"
-	CodeInternal       = "internal"
+	CodeInvalidJSON    ErrorCode = "invalid_json"
+	CodeBodyTooLarge   ErrorCode = "body_too_large"
+	CodeInvalidHand    ErrorCode = "invalid_hand"
+	CodeInvalidContext ErrorCode = "invalid_context"
+	CodeNotWinningHand ErrorCode = "not_winning_hand"
+	CodeNoYaku         ErrorCode = "no_yaku"
+	CodeInternal       ErrorCode = "internal"
 )
 
 // NewHandler returns the API's HTTP handler.
@@ -105,8 +109,8 @@ type ErrorResponse struct {
 
 // ErrorBody carries a machine-readable code and a human-readable message.
 type ErrorBody struct {
-	Code    string `json:"code"`
-	Message string `json:"message"`
+	Code    ErrorCode `json:"code"`
+	Message string    `json:"message"`
 }
 
 func handleScore(w http.ResponseWriter, r *http.Request, logger *slog.Logger) {
@@ -145,7 +149,7 @@ func handleScore(w http.ResponseWriter, r *http.Request, logger *slog.Logger) {
 }
 
 // decode reads exactly one JSON object with no unknown fields.
-func decode(w http.ResponseWriter, r *http.Request, v any) (int, string, error) {
+func decode(w http.ResponseWriter, r *http.Request, v any) (int, ErrorCode, error) {
 	dec := json.NewDecoder(http.MaxBytesReader(w, r.Body, maxBodyBytes))
 	dec.DisallowUnknownFields()
 	err := dec.Decode(v)
@@ -241,7 +245,7 @@ func toResponse(r score.Result) ScoreResponse {
 	return resp
 }
 
-func writeError(w http.ResponseWriter, logger *slog.Logger, status int, code string, err error) {
+func writeError(w http.ResponseWriter, logger *slog.Logger, status int, code ErrorCode, err error) {
 	if status >= 500 {
 		logger.Error("score request failed", "code", code, "err", err)
 	} else {

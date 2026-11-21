@@ -59,7 +59,7 @@ The scoring endpoint must work **without** vision (tiles typed in directly) — 
   "yaku": [{ "name": "riichi", "han": 1 }, { "name": "pinfu", "han": 1 }],
   "dora": 1, "akaDora": 1, "uraDora": 0,
   "han": 4, "fu": 30,
-  "fuBreakdown": [{ "reason": "base", "fu": 20 }, { "reason": "closed ron", "fu": 10 }],
+  "fuBreakdown": [{ "reason": "base", "fu": 20 }, { "reason": "closed_ron", "fu": 10 }],
   "limit": null,
   "points": { "total": 7700, "fromDiscarder": 7700 }
 }

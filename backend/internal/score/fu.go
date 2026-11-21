@@ -91,7 +91,7 @@ func (r reading) fu(pinfu bool) ([]FuItem, int) {
 
 	var triplets []FuItem
 	for i, g := range r.sets {
-		if g.Kind != hand.Triplet {
+		if g.Shape != hand.Triplet {
 			continue
 		}
 		open := i == r.openTriplet
@@ -129,10 +129,10 @@ func (r reading) fu(pinfu bool) ([]FuItem, int) {
 	if isDragon(pair) {
 		pairFu = 2
 	}
-	if pair == r.ctx.SeatWind {
+	if pair == r.ctx.SeatWind.Kind() { // a double wind (seat = round) scores both
 		pairFu += 2
 	}
-	if pair == r.ctx.RoundWind {
+	if pair == r.ctx.RoundWind.Kind() {
 		pairFu += 2
 	}
 	if pairFu > 0 {

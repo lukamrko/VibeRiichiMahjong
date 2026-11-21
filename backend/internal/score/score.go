@@ -84,7 +84,7 @@ func scoreReading(h hand.Hand, r reading) (Result, bool) {
 			res.Han += y.Han()
 		}
 		res.Limit = yakumanLimit(res.Han / 13)
-		res.Points = payout(yakumanBase*(res.Han/13), r.ctx.IsDealer(), r.ctx.WinType, r.ctx.Honba)
+		res.Points = payout(yakumanBase*(res.Han/13), r.ctx)
 		return res, true
 	}
 
@@ -99,11 +99,7 @@ func scoreReading(h hand.Hand, r reading) (Result, bool) {
 		pinfu = pinfu || y == Pinfu
 	}
 	res.Dora = countDora(h, r.ctx.DoraIndicators)
-	for _, t := range h.Tiles() {
-		if t.Red {
-			res.AkaDora++
-		}
-	}
+	res.AkaDora = h.RedFives()
 	if r.ctx.Riichi {
 		res.UraDora = countDora(h, r.ctx.UraDoraIndicators)
 	}
@@ -112,7 +108,7 @@ func scoreReading(h hand.Hand, r reading) (Result, bool) {
 
 	base, limit := basePoints(res.Han, res.Fu)
 	res.Limit = limit
-	res.Points = payout(base, r.ctx.IsDealer(), r.ctx.WinType, r.ctx.Honba)
+	res.Points = payout(base, r.ctx)
 	return res, true
 }
 
@@ -141,7 +137,7 @@ func countDora(h hand.Hand, indicators []tile.Tile) int {
 	counts := h.Counts()
 	n := 0
 	for _, ind := range indicators {
-		n += counts[DoraFor(ind.Kind)]
+		n += counts[DoraFor(ind.Kind())]
 	}
 	return n
 }
@@ -149,27 +145,10 @@ func countDora(h hand.Hand, indicators []tile.Tile) int {
 // checkPhysicalTiles rejects indicators that would need a fifth copy of a
 // tile or a second red five in a suit, counting the hand and all indicators.
 func checkPhysicalTiles(h hand.Hand, ctx WinContext) error {
-	counts := h.Counts()
-	var reds [3]int
 	all := append(h.Tiles(), ctx.DoraIndicators...)
 	all = append(all, ctx.UraDoraIndicators...)
-	for i, t := range all {
-		if t.Red {
-			reds[t.Kind.Suit()]++
-		}
-		if i >= hand.Size {
-			counts[t.Kind]++
-		}
-	}
-	for k, c := range counts {
-		if c > 4 {
-			return fmt.Errorf("%w: hand and indicators hold %d × %s", ErrInvalidContext, c, tile.Kind(k))
-		}
-	}
-	for s, r := range reds {
-		if r > 1 {
-			return fmt.Errorf("%w: hand and indicators hold %d × 0%s", ErrInvalidContext, r, tile.Suit(s))
-		}
+	if err := hand.CheckCopies(all); err != nil {
+		return fmt.Errorf("%w: hand and indicators: %w", ErrInvalidContext, err)
 	}
 	return nil
 }

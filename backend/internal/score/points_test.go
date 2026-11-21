@@ -62,7 +62,11 @@ func TestPayout(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := payout(tt.base, tt.dealer, tt.win, tt.honba); got != tt.want {
+			ctx := WinContext{SeatWind: South, WinType: tt.win, Honba: tt.honba}
+			if tt.dealer {
+				ctx.SeatWind = East
+			}
+			if got := payout(tt.base, ctx); got != tt.want {
 				t.Errorf("payout = %+v, want %+v", got, tt.want)
 			}
 		})

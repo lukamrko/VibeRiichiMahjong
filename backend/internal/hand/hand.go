@@ -34,30 +34,45 @@ func New(tiles []tile.Tile, winning tile.Tile) (Hand, error) {
 	if len(tiles) != Size {
 		return Hand{}, fmt.Errorf("%w: got %d", ErrTileCount, len(tiles))
 	}
+	if err := CheckCopies(tiles); err != nil {
+		return Hand{}, err
+	}
+	if !slices.Contains(tiles, winning) {
+		return Hand{}, fmt.Errorf("%w: %s", ErrWinningTileNotInHand, winning)
+	}
+	var counts [tile.NumKinds]int
+	for _, t := range tiles {
+		counts[t.Kind()]++
+	}
+	return Hand{tiles: slices.Clone(tiles), winning: winning, counts: counts}, nil
+}
+
+// CheckCopies reports whether tiles could come from one physical set: at most
+// 4 copies of each kind and at most one red five per suit. It returns
+// ErrTooManyCopies or ErrDuplicateRedFive (wrapped) otherwise. New uses it for
+// the hand; scoring uses it for the hand plus the dora indicators.
+func CheckCopies(tiles []tile.Tile) error {
 	var (
 		counts [tile.NumKinds]int
 		reds   [3]int // per suited Suit
 	)
 	for _, t := range tiles {
-		counts[t.Kind]++
-		if t.Red {
-			reds[t.Kind.Suit()]++
+		counts[t.Kind()]++
+		if t.IsRed() {
+			reds[t.Kind().Suit()]++
 		}
 	}
 	for k, c := range counts {
 		if c > 4 {
-			return Hand{}, fmt.Errorf("%w: %d × %s", ErrTooManyCopies, c, tile.Kind(k))
+			return fmt.Errorf("%w: %d × %s", ErrTooManyCopies, c, tile.Kind(k))
 		}
 	}
 	for s, r := range reds {
 		if r > 1 {
-			return Hand{}, fmt.Errorf("%w: %d × 0%s", ErrDuplicateRedFive, r, tile.Suit(s))
+			return fmt.Errorf("%w: %d × 0%s", ErrDuplicateRedFive, r, tile.Suit(s))
 		}
 	}
-	if !slices.Contains(tiles, winning) {
-		return Hand{}, fmt.Errorf("%w: %s", ErrWinningTileNotInHand, winning)
-	}
-	return Hand{tiles: slices.Clone(tiles), winning: winning, counts: counts}, nil
+	return nil
 }
 
 // Parse parses a compact MPSZ hand (14 tiles, including the winning tile) and
@@ -79,6 +94,17 @@ func (h Hand) Tiles() []tile.Tile { return slices.Clone(h.tiles) }
 
 // WinningTile returns the tile that completed the hand.
 func (h Hand) WinningTile() tile.Tile { return h.winning }
+
+// RedFives returns how many red fives (aka dora) the hand holds.
+func (h Hand) RedFives() int {
+	n := 0
+	for _, t := range h.tiles {
+		if t.IsRed() {
+			n++
+		}
+	}
+	return n
+}
 
 // Counts returns how many tiles of each kind the hand holds (red fives count as fives).
 func (h Hand) Counts() [tile.NumKinds]int { return h.counts }

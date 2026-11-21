@@ -137,6 +137,16 @@ var (
 
 func isDragon(k tile.Kind) bool { return k.IsHonor() && k.Number() >= 5 }
 
+// yakuList collects yaku in detection order.
+type yakuList []Yaku
+
+// add appends y when ok holds.
+func (l *yakuList) add(ok bool, y Yaku) {
+	if ok {
+		*l = append(*l, y)
+	}
+}
+
 // reading is one decomposition prepared for yaku and fu detection.
 type reading struct {
 	d      hand.Decomposition
@@ -152,10 +162,10 @@ type reading struct {
 }
 
 func newReading(h hand.Hand, d hand.Decomposition, ctx WinContext) reading {
-	r := reading{d: d, counts: h.Counts(), win: h.WinningTile().Kind, ctx: ctx, openTriplet: -1}
+	r := reading{d: d, counts: h.Counts(), win: h.WinningTile().Kind(), ctx: ctx, openTriplet: -1}
 	if d.Form == hand.Standard {
 		r.sets, r.pair = d.Groups[:4], d.Groups[4]
-		if ctx.WinType == Ron && d.WinningGroup < 4 && d.Groups[d.WinningGroup].Kind == hand.Triplet {
+		if ctx.WinType == Ron && d.WinningGroup < 4 && d.Groups[d.WinningGroup].Shape == hand.Triplet {
 			r.openTriplet = d.WinningGroup
 		}
 	}
@@ -176,24 +186,29 @@ func (r reading) any(pred func(tile.Kind) bool) bool {
 	return !r.all(func(k tile.Kind) bool { return !pred(k) })
 }
 
-func (r reading) triplets() []hand.Group {
+// setsOf returns the sets of this reading that have the given shape.
+func (r reading) setsOf(shape hand.Shape) []hand.Group {
 	var out []hand.Group
 	for _, g := range r.sets {
-		if g.Kind == hand.Triplet {
+		if g.Shape == shape {
 			out = append(out, g)
 		}
 	}
 	return out
 }
 
-func (r reading) sequences() []hand.Group {
-	var out []hand.Group
-	for _, g := range r.sets {
-		if g.Kind == hand.Sequence {
-			out = append(out, g)
+func (r reading) triplets() []hand.Group  { return r.setsOf(hand.Triplet) }
+func (r reading) sequences() []hand.Group { return r.setsOf(hand.Sequence) }
+
+// countTriplets returns how many triplets have a kind satisfying pred.
+func (r reading) countTriplets(pred func(tile.Kind) bool) int {
+	n := 0
+	for _, g := range r.triplets() {
+		if pred(g.First) {
+			n++
 		}
 	}
-	return out
+	return n
 }
 
 func (r reading) concealedTriplets() int {
@@ -205,17 +220,13 @@ func (r reading) concealedTriplets() int {
 }
 
 func (r reading) isValueHonor(k tile.Kind) bool {
-	return isDragon(k) || k == r.ctx.SeatWind || k == r.ctx.RoundWind
+	return isDragon(k) || r.ctx.isValueWind(k)
 }
 
 // yakuman returns the yakuman of this reading, in canonical order.
 func (r reading) yakuman() []Yaku {
-	var out []Yaku
-	add := func(ok bool, y Yaku) {
-		if ok {
-			out = append(out, y)
-		}
-	}
+	var out yakuList
+	add := out.add
 	switch r.d.Form {
 	case hand.Kokushi:
 		add(r.d.Wait == hand.Juusanmen, KokushiMusouJuusanmen)
@@ -225,15 +236,7 @@ func (r reading) yakuman() []Yaku {
 			add(r.d.Wait == hand.Tanki, SuuankouTanki)
 			add(r.d.Wait != hand.Tanki, Suuankou)
 		}
-		dragons, winds := 0, 0
-		for _, g := range r.triplets() {
-			switch {
-			case isDragon(g.First):
-				dragons++
-			case isWind(g.First):
-				winds++
-			}
-		}
+		dragons, winds := r.countTriplets(isDragon), r.countTriplets(isWind)
 		add(dragons == 3, Daisangen)
 		add(winds == 3 && isWind(r.pair.First), Shousuushii)
 		add(winds == 4, Daisuushii)
@@ -294,12 +297,8 @@ func (r reading) chuuren() (pure, ok bool) {
 
 // regularYaku returns the non-yakuman yaku of this reading, in canonical order.
 func (r reading) regularYaku() []Yaku {
-	var out []Yaku
-	add := func(ok bool, y Yaku) {
-		if ok {
-			out = append(out, y)
-		}
-	}
+	var out yakuList
+	add := out.add
 	c := r.ctx
 	tsumo := c.WinType == Tsumo
 	add(c.Riichi && !c.DoubleRiichi, Riichi)
@@ -359,23 +358,23 @@ func (r reading) standardYaku(add func(bool, Yaku)) {
 	add(r.isPinfu(), Pinfu)
 
 	// Iipeikou / ryanpeikou: count pairs of identical sequences.
-	same := map[tile.Kind]int{}
+	seqsByFirst := map[tile.Kind]int{}
 	for _, g := range seqs {
-		same[g.First]++
+		seqsByFirst[g.First]++
 	}
-	peiko := 0
-	for _, n := range same {
-		peiko += n / 2
+	peikou := 0 // number of pairs of identical sequences
+	for _, n := range seqsByFirst {
+		peikou += n / 2
 	}
-	add(peiko == 1, Iipeikou)
-	add(peiko == 2, Ryanpeikou)
+	add(peikou == 1, Iipeikou)
+	add(peikou == 2, Ryanpeikou)
 
 	for _, g := range trips {
 		add(g.First == haku, YakuhaiHaku)
 		add(g.First == hatsu, YakuhaiHatsu)
 		add(g.First == chun, YakuhaiChun)
-		add(g.First == r.ctx.SeatWind, YakuhaiSeatWind)
-		add(g.First == r.ctx.RoundWind, YakuhaiRoundWind)
+		add(g.First == r.ctx.SeatWind.Kind(), YakuhaiSeatWind)
+		add(g.First == r.ctx.RoundWind.Kind(), YakuhaiRoundWind)
 	}
 
 	add(sameNumberAllSuits(seqs), SanshokuDoujun)
@@ -391,13 +390,7 @@ func (r reading) standardYaku(add func(bool, Yaku)) {
 	add(r.concealedTriplets() == 3, Sanankou)
 	add(len(trips) == 4, Toitoi)
 
-	dragonTrips := 0
-	for _, g := range trips {
-		if isDragon(g.First) {
-			dragonTrips++
-		}
-	}
-	add(dragonTrips == 2 && isDragon(r.pair.First), Shousangen)
+	add(r.countTriplets(isDragon) == 2 && isDragon(r.pair.First), Shousangen)
 }
 
 func (r reading) everyGroup(pred func(hand.Group) bool) bool {
@@ -405,7 +398,7 @@ func (r reading) everyGroup(pred func(hand.Group) bool) bool {
 }
 
 func groupHas(g hand.Group, pred func(tile.Kind) bool) bool {
-	if g.Kind == hand.Sequence {
+	if g.Shape == hand.Sequence {
 		return pred(g.First) || pred(g.First+2)
 	}
 	return pred(g.First)

@@ -112,9 +112,10 @@ type Points struct {
 
 func roundUp100(n int) int { return (n + 99) / 100 * 100 }
 
-// payout turns base points into payments.
-func payout(base int, dealer bool, win WinType, honba int) Points {
-	switch win {
+// payout turns base points into payments for the winner described by ctx.
+func payout(base int, ctx WinContext) Points {
+	dealer, honba := ctx.IsDealer(), ctx.Honba
+	switch ctx.WinType {
 	case Ron:
 		mult := 4
 		if dealer {
@@ -131,6 +132,6 @@ func payout(base int, dealer bool, win WinType, honba int) Points {
 		fromNonDealer := roundUp100(base) + 100*honba
 		return Points{Total: fromDealer + 2*fromNonDealer, FromDealer: fromDealer, FromNonDealer: fromNonDealer}
 	default:
-		panic(fmt.Sprintf("score: unknown win type %v", win))
+		panic(fmt.Sprintf("score: unknown win type %v", ctx.WinType))
 	}
 }

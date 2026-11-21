@@ -24,8 +24,8 @@ func TestWinContextValidate(t *testing.T) {
 		{"five dora indicators", func(c *WinContext) { c.DoraIndicators = mustTiles(t, "1m", "2m", "3m", "4m", "5m") }, false},
 		{"honba", func(c *WinContext) { c.Honba = 3 }, false},
 
-		{"round wind is not a wind", func(c *WinContext) { c.RoundWind = mustKind(t, "5z") }, true},
-		{"seat wind is not a wind", func(c *WinContext) { c.SeatWind = mustKind(t, "1m") }, true},
+		{"round wind is not a wind", func(c *WinContext) { c.RoundWind = Wind(4) }, true},
+		{"seat wind is not a wind", func(c *WinContext) { c.SeatWind = Wind(9) }, true},
 		{"unknown win type", func(c *WinContext) { c.WinType = WinType(9) }, true},
 		{"double riichi without riichi", func(c *WinContext) { c.DoubleRiichi = true }, true},
 		{"ippatsu without riichi", func(c *WinContext) { c.Ippatsu = true }, true},
@@ -66,22 +66,78 @@ func TestWinContextValidate(t *testing.T) {
 	}
 }
 
-func TestParseWinTypeAndWind(t *testing.T) {
-	for _, s := range []string{"ron", "tsumo"} {
-		w, err := ParseWinType(s)
-		if err != nil || w.String() != s {
-			t.Errorf("ParseWinType(%q) = %v, %v", s, w, err)
-		}
+func TestParseWinType(t *testing.T) {
+	tests := []struct {
+		in      string
+		want    WinType
+		wantErr bool
+	}{
+		{"ron", Ron, false},
+		{"tsumo", Tsumo, false},
+		{"Ron", 0, true},
+		{"draw", 0, true},
+		{"", 0, true},
 	}
-	if _, err := ParseWinType("Ron"); !errors.Is(err, ErrInvalidContext) {
-		t.Errorf("ParseWinType(\"Ron\") error = %v, want ErrInvalidContext", err)
+	for _, tt := range tests {
+		t.Run(tt.in, func(t *testing.T) {
+			got, err := ParseWinType(tt.in)
+			if tt.wantErr {
+				if !errors.Is(err, ErrInvalidContext) {
+					t.Errorf("ParseWinType(%q) error = %v, want ErrInvalidContext", tt.in, err)
+				}
+				return
+			}
+			if err != nil || got != tt.want || got.String() != tt.in {
+				t.Errorf("ParseWinType(%q) = %v, %v; want %v", tt.in, got, err, tt.want)
+			}
+		})
 	}
-	if k, err := ParseWind("3z"); err != nil || k.String() != "3z" {
-		t.Errorf("ParseWind(\"3z\") = %v, %v", k, err)
+}
+
+func TestParseWind(t *testing.T) {
+	tests := []struct {
+		in      string
+		want    Wind
+		wantErr bool
+	}{
+		{"1z", East, false},
+		{"2z", South, false},
+		{"3z", West, false},
+		{"4z", North, false},
+		{"5z", 0, true},
+		{"1m", 0, true},
+		{"0p", 0, true},
+		{"", 0, true},
+		{"1z2z", 0, true},
 	}
-	for _, s := range []string{"5z", "1m", "0p", "", "1z2z"} {
-		if _, err := ParseWind(s); !errors.Is(err, ErrInvalidContext) {
-			t.Errorf("ParseWind(%q) error = %v, want ErrInvalidContext", s, err)
+	for _, tt := range tests {
+		t.Run(tt.in, func(t *testing.T) {
+			got, err := ParseWind(tt.in)
+			if tt.wantErr {
+				if !errors.Is(err, ErrInvalidContext) {
+					t.Errorf("ParseWind(%q) error = %v, want ErrInvalidContext", tt.in, err)
+				}
+				return
+			}
+			if err != nil || got != tt.want || got.String() != tt.in || got.Kind().String() != tt.in {
+				t.Errorf("ParseWind(%q) = %v, %v; want %v", tt.in, got, err, tt.want)
+			}
+		})
+	}
+}
+
+func TestWindString(t *testing.T) {
+	tests := []struct {
+		w    Wind
+		want string
+	}{
+		{East, "1z"},
+		{North, "4z"},
+		{Wind(4), "Wind(4)"},
+	}
+	for _, tt := range tests {
+		if got := tt.w.String(); got != tt.want {
+			t.Errorf("Wind(%d).String() = %q, want %q", uint8(tt.w), got, tt.want)
 		}
 	}
 }

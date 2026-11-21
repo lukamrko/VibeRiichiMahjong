@@ -24,6 +24,7 @@ There are 34 distinct tile kinds (37 with red fives as separate detection classe
 | **Hand** | The 14 tiles of a winning hand (v1: all concealed). |
 | **Winning tile** | The tile that completed the hand (agari-hai). Affects fu and some yaku (pinfu, wait type). |
 | **Meld / Set (mentsu)** | Sequence (shuntsu, e.g. `345p`) or triplet (koutsu, e.g. `777s`). Kan = quad. |
+| **Group** | One part of a decomposition: a set or the pair. In code: `hand.Group`, whose `Shape` is `Sequence`, `Triplet` or `Pair`. |
 | **Pair (jantou)** | Two identical tiles. |
 | **Decomposition** | One way of splitting a hand into 4 sets + pair (or 7 pairs / kokushi), plus which group the winning tile completed. A hand can have several; scoring keeps the highest. |
 | **Form** | Overall shape of a winning hand: `standard` (4 sets + pair), `chiitoitsu` (7 distinct pairs; four of a kind is not two pairs), `kokushi`. |
@@ -37,7 +38,7 @@ There are 34 distinct tile kinds (37 with red fives as separate detection classe
 | **Limit hand** | Mangan, haneman, baiman, sanbaiman, yakuman (and kazoe yakuman). |
 | **Ron / Tsumo** | Win on another player's discard / by self-draw. |
 | **Dealer (oya)** | East seat; scores 1.5×. |
-| **Round wind / Seat wind** | Prevailing wind / player's own wind; affect yakuhai and fu. |
+| **Round wind / Seat wind** | Prevailing wind / player's own wind; affect yakuhai and fu. In code: `score.Wind` (`East`…`North`, `1z`–`4z`). |
 | **Honba** | Repeat counter; adds 300 points per honba. |
 | **WinContext** | All non-tile inputs to scoring (winds, riichi, ron/tsumo, dora indicators, honba, situational flags). |
 | **Detection** | Vision output for one tile: MPSZ id, confidence, bounding box. |

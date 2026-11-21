@@ -9,15 +9,6 @@ import (
 	"github.com/lukamrko/VibeRiichiMahjong/backend/internal/tile"
 )
 
-func mustKind(t *testing.T, s string) tile.Kind {
-	t.Helper()
-	tl, err := tile.Parse(s)
-	if err != nil {
-		t.Fatal(err)
-	}
-	return tl.Kind
-}
-
 func mustTiles(t *testing.T, ids ...string) []tile.Tile {
 	t.Helper()
 	out := make([]tile.Tile, len(ids))
@@ -36,8 +27,8 @@ func mustTiles(t *testing.T, ids ...string) []tile.Tile {
 func baseContext(t *testing.T) WinContext {
 	t.Helper()
 	return WinContext{
-		RoundWind:      mustKind(t, "1z"),
-		SeatWind:       mustKind(t, "2z"),
+		RoundWind:      East,
+		SeatWind:       South,
 		WinType:        Ron,
 		DoraIndicators: mustTiles(t, "3z"), // dora 4z
 	}

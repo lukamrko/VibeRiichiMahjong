@@ -53,8 +53,39 @@ func ParseWinType(s string) (WinType, error) {
 	}
 }
 
-// East is the East wind (1z); the player whose seat wind is East is the dealer.
-var East = honorKind(1)
+// Wind is a round or seat wind. The player whose seat wind is East is the dealer.
+type Wind uint8
+
+// The four winds, in seating order (1z–4z).
+const (
+	East Wind = iota
+	South
+	West
+	North
+)
+
+// Kind returns the wind's honor tile kind, 1z (East) to 4z (North).
+func (w Wind) Kind() tile.Kind { return honorKind(int(w) + 1) }
+
+// String returns the wind's MPSZ id, e.g. "1z".
+func (w Wind) String() string {
+	switch w {
+	case East, South, West, North:
+		return w.Kind().String()
+	default:
+		return fmt.Sprintf("Wind(%d)", uint8(w))
+	}
+}
+
+// valid reports whether w is one of the four winds.
+func (w Wind) valid() bool {
+	switch w {
+	case East, South, West, North:
+		return true
+	default:
+		return false
+	}
+}
 
 // honorKind returns the honor kind for 1–7 (1z–7z).
 func honorKind(n int) tile.Kind {
@@ -68,18 +99,18 @@ func honorKind(n int) tile.Kind {
 func isWind(k tile.Kind) bool { return k.IsHonor() && k.Number() <= 4 }
 
 // ParseWind parses a wind tile id, "1z" (East) to "4z" (North).
-func ParseWind(s string) (tile.Kind, error) {
+func ParseWind(s string) (Wind, error) {
 	t, err := tile.Parse(s)
-	if err != nil || t.Red || !isWind(t.Kind) {
+	if err != nil || t.IsRed() || !isWind(t.Kind()) {
 		return 0, fmt.Errorf("%w: wind %q (want 1z–4z)", ErrInvalidContext, s)
 	}
-	return t.Kind, nil
+	return Wind(t.Kind().Number() - 1), nil
 }
 
 // WinContext holds every non-tile input to scoring (see docs/domain/glossary.md).
 type WinContext struct {
-	RoundWind tile.Kind
-	SeatWind  tile.Kind
+	RoundWind Wind
+	SeatWind  Wind
 	WinType   WinType
 
 	Riichi       bool
@@ -93,7 +124,7 @@ type WinContext struct {
 
 	Haitei  bool // tsumo on the last wall tile
 	Houtei  bool // ron on the last discard
-	Rinshan bool // always false in v1 (needs your own kan)
+	Rinshan bool // always rejected in v1: it needs your own kan (docs/domain/rules.md)
 	Chankan bool // ron by robbing a kan
 	Tenhou  bool // dealer wins on the initial deal
 	Chiihou bool // non-dealer wins on the first draw
@@ -101,6 +132,11 @@ type WinContext struct {
 
 // IsDealer reports whether the winner is the dealer (seat wind East).
 func (c WinContext) IsDealer() bool { return c.SeatWind == East }
+
+// isValueWind reports whether k is the seat or round wind.
+func (c WinContext) isValueWind(k tile.Kind) bool {
+	return k == c.SeatWind.Kind() || k == c.RoundWind.Kind()
+}
 
 // Validate reports the first contradiction in the context, wrapped in ErrInvalidContext.
 func (c WinContext) Validate() error {
@@ -114,9 +150,9 @@ func (c WinContext) Validate() error {
 		return invalid("unknown win type %d", c.WinType)
 	}
 	switch {
-	case !isWind(c.RoundWind):
+	case !c.RoundWind.valid():
 		return invalid("round wind %s is not a wind", c.RoundWind)
-	case !isWind(c.SeatWind):
+	case !c.SeatWind.valid():
 		return invalid("seat wind %s is not a wind", c.SeatWind)
 	case c.DoubleRiichi && !c.Riichi:
 		return invalid("doubleRiichi requires riichi")

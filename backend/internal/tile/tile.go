@@ -123,10 +123,18 @@ func (k Kind) String() string {
 
 // Tile is a single tile: its kind plus whether it is a red five (aka dora).
 // Hand-shape logic only looks at Kind, so a red five and a normal five match.
+// The fields are unexported so every Tile goes through New (or Parse), which
+// only allows red on suited fives; the zero Tile is 1m.
 type Tile struct {
-	Kind Kind
-	Red  bool
+	kind Kind
+	red  bool
 }
+
+// Kind returns the tile's kind.
+func (t Tile) Kind() Kind { return t.kind }
+
+// IsRed reports whether the tile is a red five (aka dora).
+func (t Tile) IsRed() bool { return t.red }
 
 // New returns a tile. Red is only allowed on suited fives.
 func New(s Suit, number int, red bool) (Tile, error) {
@@ -137,22 +145,22 @@ func New(s Suit, number int, red bool) (Tile, error) {
 	if red && (s == Honor || number != 5) {
 		return Tile{}, fmt.Errorf("%w: only a suited five can be red", ErrInvalidTile)
 	}
-	return Tile{Kind: k, Red: red}, nil
+	return Tile{kind: k, red: red}, nil
 }
 
 // String returns the MPSZ id; red fives use 0, e.g. "0p".
 func (t Tile) String() string {
-	if t.Red {
-		return "0" + t.Kind.Suit().String()
+	if t.red {
+		return "0" + t.kind.Suit().String()
 	}
-	return t.Kind.String()
+	return t.kind.String()
 }
 
 func (t Tile) digit() byte {
-	if t.Red {
+	if t.red {
 		return '0'
 	}
-	return byte('0' + t.Kind.Number())
+	return byte('0' + t.kind.Number())
 }
 
 // Parse parses a single MPSZ tile id such as "1m", "0p" or "7z".
@@ -219,8 +227,8 @@ func FormatTiles(tiles []Tile) string {
 	var b strings.Builder
 	for i, t := range tiles {
 		b.WriteByte(t.digit())
-		if i == len(tiles)-1 || tiles[i+1].Kind.Suit() != t.Kind.Suit() {
-			b.WriteByte(t.Kind.Suit().Letter())
+		if i == len(tiles)-1 || tiles[i+1].kind.Suit() != t.kind.Suit() {
+			b.WriteByte(t.kind.Suit().Letter())
 		}
 	}
 	return b.String()

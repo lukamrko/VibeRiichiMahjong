@@ -69,7 +69,7 @@ _Add `build`, `test`, `lint`, `run` commands per component here as each one is s
 - **Backend** (run from `backend/`; module `github.com/lukamrko/VibeRiichiMahjong/backend`, Go 1.25):
   - test: `go test ./...` (also reads `fixtures/hands/`)
   - format / vet: `gofmt -l .` (must print nothing), `go vet ./...`
-  - lint: `golangci-lint run`
+  - lint: `golangci-lint run` (config `backend/.golangci.yml`: default linters plus `exhaustive`)
   - run: `go run ./cmd/server -addr :8080` (serves `POST /score`)
   - packages: `internal/tile` (Tile, Kind, Suit, MPSZ parsing), `internal/hand` (Hand validation,
     decompositions, wait types), `internal/score` (WinContext, yaku, fu, han, limits, points; picks the
