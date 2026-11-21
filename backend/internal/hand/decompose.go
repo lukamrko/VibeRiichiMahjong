@@ -66,19 +66,6 @@ func (g Group) String() string {
 	}
 }
 
-func compareGroups(a, b Group) int {
-	if a.Kind == Pair && b.Kind != Pair {
-		return 1
-	}
-	if b.Kind == Pair && a.Kind != Pair {
-		return -1
-	}
-	if a.First != b.First {
-		return int(a.First) - int(b.First)
-	}
-	return int(a.Kind) - int(b.Kind)
-}
-
 // Form is the overall shape of a winning hand.
 type Form uint8
 

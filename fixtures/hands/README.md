@@ -13,7 +13,7 @@ One JSON file per category. Each file is an array of cases; `id` is unique acros
 | `special-shapes.json` | Chiitoitsu (kokushi lives in `limits.json`) |
 | `situational.json` | Double riichi, ippatsu, haitei, houtei, chankan |
 | `dora.json` | Aka dora, including a red five as the winning tile |
-| `limits.json` | Kazoe yakuman and every v1 yakuman, including double yakuman |
+| `limits.json` | Kazoe yakuman and every v1 yakuman, including double yakuman and stacked yakuman |
 
 ## Case format
 
@@ -67,7 +67,9 @@ One JSON file per category. Each file is an array of cases; `id` is unique acros
 - `fuBreakdown`: fu items **before** rounding, using the reasons below. Empty for yakuman hands.
   Pinfu tsumo is just `base` (20). Chiitoitsu is just `chiitoitsu` (25).
 - `limit`: `null`, `mangan`, `haneman`, `baiman`, `sanbaiman`, `yakuman`, `kazoe_yakuman`, `double_yakuman`,
-  `triple_yakuman`.
+  `triple_yakuman`, `quadruple_yakuman`, `quintuple_yakuman`, `sextuple_yakuman` (stacked yakuman are not capped;
+  6× is the most a closed hand can reach, e.g. tenhou + daisuushii + tsuuiisou + suuankou tanki).
+- `dora`, `akaDora`, `uraDora` are `0` for yakuman hands.
 - `points`: all values include honba (+300 ron, +100 per payer on tsumo). Riichi sticks on the table are not
   included. The keys depend on the win:
 

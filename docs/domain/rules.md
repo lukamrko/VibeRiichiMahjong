@@ -6,7 +6,8 @@
 - Kuitan (open tanyao) allowed — irrelevant in v1 (closed only), but don't encode the opposite.
 - **No kiriage mangan**: 4 han 30 fu = 7700 (non-dealer), 3 han 60 fu = 7700.
 - Kazoe yakuman: 13+ han counts as yakuman.
-- Multiple yakuman stack (double yakuman possible).
+- Multiple yakuman stack (double yakuman possible), with no cap: up to 6× for a closed hand (decided in #4).
+  Regular yaku and dora are ignored when a hand has a yakuman.
 - **Double yakuman hands count double** (decided in #2): suuankou tanki, kokushi musou 13-sided wait
   (juusanmen), junsei chuuren poutou, and daisuushii are each worth 2× yakuman.
 - Fu rounded up to the nearest 10 (chiitoitsu fixed at 25 fu). Pinfu tsumo = 20 fu; closed ron +10 fu.
