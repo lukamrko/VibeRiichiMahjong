@@ -25,6 +25,57 @@ func TestParseValid(t *testing.T) {
 	}
 }
 
+func TestRedFives(t *testing.T) {
+	tests := []struct {
+		hand, winning string
+		want          int
+	}{
+		{"123m456p789s11122z", "1m", 0},
+		{"123m406p789s11122z", "0p", 1},
+		{"406m406p406s11122z", "4m", 3},
+	}
+	for _, tt := range tests {
+		t.Run(tt.hand, func(t *testing.T) {
+			h, err := Parse(tt.hand, tt.winning)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if got := h.RedFives(); got != tt.want {
+				t.Errorf("RedFives() = %d, want %d", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestCheckCopies(t *testing.T) {
+	tests := []struct {
+		name, tiles string
+		wantErr     error
+	}{
+		{"four copies", "1111m", nil},
+		{"red and plain fives", "0555m", nil},
+		{"red fives in different suits", "0m0p0s", nil},
+		{"five copies", "11111m", ErrTooManyCopies},
+		{"five fives with a red one", "05555p", ErrTooManyCopies},
+		{"two red fives in a suit", "00s", ErrDuplicateRedFive},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tiles, err := tile.ParseTiles(tt.tiles)
+			if err != nil {
+				t.Fatal(err)
+			}
+			err = CheckCopies(tiles)
+			if tt.wantErr == nil && err != nil {
+				t.Errorf("CheckCopies(%s) = %v, want nil", tt.tiles, err)
+			}
+			if tt.wantErr != nil && !errors.Is(err, tt.wantErr) {
+				t.Errorf("CheckCopies(%s) = %v, want %v", tt.tiles, err, tt.wantErr)
+			}
+		})
+	}
+}
+
 func TestParseErrors(t *testing.T) {
 	tests := []struct {
 		name, hand, winning string
@@ -178,11 +229,11 @@ func TestDecompositionWinningGroup(t *testing.T) {
 	if d.Form != Standard || len(d.Groups) != 5 {
 		t.Fatalf("got form %v with %d groups", d.Form, len(d.Groups))
 	}
-	if d.Groups[4].Kind != Pair {
+	if d.Groups[4].Shape != Pair {
 		t.Errorf("last group should be the pair, got %v", d.Groups[4])
 	}
 	w := d.Groups[d.WinningGroup]
-	if w.String() != "678s" || !w.Contains(h.WinningTile().Kind) {
+	if w.String() != "678s" || !w.Contains(h.WinningTile().Kind()) {
 		t.Errorf("winning group = %v", w)
 	}
 }

@@ -105,8 +105,19 @@ LIMIT_FROM_ORACLE = {
     "kazoe yakuman": "kazoe_yakuman",
     "2x yakuman": "double_yakuman",
     "3x yakuman": "triple_yakuman",
+    "4x yakuman": "quadruple_yakuman",
+    "5x yakuman": "quintuple_yakuman",
+    "6x yakuman": "sextuple_yakuman",
 }
-YAKUMAN_LIMITS = {"yakuman", "kazoe_yakuman", "double_yakuman", "triple_yakuman"}
+YAKUMAN_LIMITS = {
+    "yakuman",
+    "kazoe_yakuman",
+    "double_yakuman",
+    "triple_yakuman",
+    "quadruple_yakuman",
+    "quintuple_yakuman",
+    "sextuple_yakuman",
+}
 
 CONTEXT_FIELDS = {
     "roundWind": str,

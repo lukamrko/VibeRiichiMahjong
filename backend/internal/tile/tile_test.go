@@ -80,8 +80,8 @@ func TestParse(t *testing.T) {
 		if err != nil {
 			t.Fatalf("Parse(%q) error: %v", tt.in, err)
 		}
-		if got.Kind.String() != tt.wantKind || got.Red != tt.wantRed {
-			t.Errorf("Parse(%q) = {%s, red=%v}, want {%s, red=%v}", tt.in, got.Kind, got.Red, tt.wantKind, tt.wantRed)
+		if got.Kind().String() != tt.wantKind || got.IsRed() != tt.wantRed {
+			t.Errorf("Parse(%q) = {%s, red=%v}, want {%s, red=%v}", tt.in, got.Kind(), got.IsRed(), tt.wantKind, tt.wantRed)
 		}
 		if got.String() != tt.in {
 			t.Errorf("Parse(%q).String() = %q", tt.in, got.String())
@@ -123,7 +123,7 @@ func TestParseTiles(t *testing.T) {
 			t.Errorf("tile %d = %s, want %s", i, got[i], want[i])
 		}
 	}
-	if !got[4].Red || got[4].Kind.Number() != 5 {
+	if !got[4].IsRed() || got[4].Kind().Number() != 5 {
 		t.Errorf("tile 4 should be red 5p, got %+v", got[4])
 	}
 }

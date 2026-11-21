@@ -1,0 +1,12 @@
+version: "2"
+
+linters:
+  # Keep the default set and add exhaustive: AGENTS.md requires every switch
+  # over a domain kind (Suit, Form, Wait, WinType, Wind, …) to handle each case
+  # explicitly (ADR-0005).
+  enable:
+    - exhaustive
+  settings:
+    exhaustive:
+      # A default clause alone does not count as handling the missing cases.
+      default-signifies-exhaustive: false

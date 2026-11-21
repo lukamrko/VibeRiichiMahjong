@@ -69,9 +69,11 @@ _Add `build`, `test`, `lint`, `run` commands per component here as each one is s
 - **Backend** (run from `backend/`; module `github.com/lukamrko/VibeRiichiMahjong/backend`, Go 1.25):
   - test: `go test ./...` (also reads `fixtures/hands/`)
   - format / vet: `gofmt -l .` (must print nothing), `go vet ./...`
-  - lint: `golangci-lint run`
+  - lint: `golangci-lint run` (config `backend/.golangci.yml`: default linters plus `exhaustive`)
+  - run: `go run ./cmd/server -addr :8080` (serves `POST /score`)
   - packages: `internal/tile` (Tile, Kind, Suit, MPSZ parsing), `internal/hand` (Hand validation,
-    decompositions, wait types). Scoring (#4) builds on top of these.
+    decompositions, wait types), `internal/score` (WinContext, yaku, fu, han, limits, points; picks the
+    highest-scoring decomposition), `internal/api` (HTTP handler; its tests POST every fixture to a real server).
 
 - **Fixture oracle check** (run after any change to `fixtures/hands/`; see its README):
   `python -m venv tools/oracle/.venv && tools/oracle/.venv/Scripts/python -m pip install -r tools/oracle/requirements.txt`,

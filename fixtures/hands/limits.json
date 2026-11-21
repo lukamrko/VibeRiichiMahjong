@@ -723,5 +723,160 @@
         "fromNonDealer": 8000
       }
     }
+  },
+  {
+    "id": "tenhou-suuankou-tanki-triple",
+    "description": "Tenhou on a four-concealed-triplets hand read as a tanki wait (3m): tenhou (1x) stacks with suuankou tanki (2x) = triple yakuman.",
+    "input": {
+      "hand": "22233m444p666888s",
+      "winningTile": "3m",
+      "context": {
+        "roundWind": "1z",
+        "seatWind": "1z",
+        "winType": "tsumo",
+        "riichi": false,
+        "doubleRiichi": false,
+        "ippatsu": false,
+        "doraIndicators": [
+          "1z"
+        ],
+        "uraDoraIndicators": [],
+        "honba": 0,
+        "haitei": false,
+        "houtei": false,
+        "rinshan": false,
+        "chankan": false,
+        "tenhou": true,
+        "chiihou": false
+      }
+    },
+    "expected": {
+      "yaku": [
+        {
+          "name": "suuankou_tanki",
+          "han": 26
+        },
+        {
+          "name": "tenhou",
+          "han": 13
+        }
+      ],
+      "dora": 0,
+      "akaDora": 0,
+      "uraDora": 0,
+      "han": 39,
+      "fu": null,
+      "fuBreakdown": [],
+      "limit": "triple_yakuman",
+      "points": {
+        "total": 144000,
+        "fromEachNonDealer": 48000
+      }
+    }
+  },
+  {
+    "id": "sextuple-yakuman",
+    "description": "Tenhou + daisuushii (2x) + tsuuiisou + suuankou tanki (2x) = 6x yakuman, the most a closed hand can stack.",
+    "input": {
+      "hand": "11122233344455z",
+      "winningTile": "5z",
+      "context": {
+        "roundWind": "1z",
+        "seatWind": "1z",
+        "winType": "tsumo",
+        "riichi": false,
+        "doubleRiichi": false,
+        "ippatsu": false,
+        "doraIndicators": [
+          "4m"
+        ],
+        "uraDoraIndicators": [],
+        "honba": 0,
+        "haitei": false,
+        "houtei": false,
+        "rinshan": false,
+        "chankan": false,
+        "tenhou": true,
+        "chiihou": false
+      }
+    },
+    "expected": {
+      "yaku": [
+        {
+          "name": "suuankou_tanki",
+          "han": 26
+        },
+        {
+          "name": "daisuushii",
+          "han": 26
+        },
+        {
+          "name": "tsuuiisou",
+          "han": 13
+        },
+        {
+          "name": "tenhou",
+          "han": 13
+        }
+      ],
+      "dora": 0,
+      "akaDora": 0,
+      "uraDora": 0,
+      "han": 78,
+      "fu": null,
+      "fuBreakdown": [],
+      "limit": "sextuple_yakuman",
+      "points": {
+        "total": 288000,
+        "fromEachNonDealer": 96000
+      }
+    }
+  },
+  {
+    "id": "yakuman-ignores-dora",
+    "description": "Suuankou tsumo holding three dora (indicator 1m → 2m) and a red five: dora are reported as 0 and add nothing to a yakuman.",
+    "input": {
+      "hand": "22233m444p055888s",
+      "winningTile": "8s",
+      "context": {
+        "roundWind": "1z",
+        "seatWind": "2z",
+        "winType": "tsumo",
+        "riichi": false,
+        "doubleRiichi": false,
+        "ippatsu": false,
+        "doraIndicators": [
+          "1m"
+        ],
+        "uraDoraIndicators": [],
+        "honba": 0,
+        "haitei": false,
+        "houtei": false,
+        "rinshan": false,
+        "chankan": false,
+        "tenhou": false,
+        "chiihou": false
+      }
+    },
+    "expected": {
+      "yaku": [
+        {
+          "name": "suuankou",
+          "han": 13
+        }
+      ],
+      "dora": 0,
+      "akaDora": 0,
+      "uraDora": 0,
+      "han": 13,
+      "fu": null,
+      "fuBreakdown": [],
+      "limit": "yakuman",
+      "points": {
+        "total": 32000,
+        "fromDealer": 16000,
+        "fromNonDealer": 8000
+      }
+    }
   }
 ]

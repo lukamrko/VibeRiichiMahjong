@@ -59,7 +59,7 @@ The scoring endpoint must work **without** vision (tiles typed in directly) — 
   "yaku": [{ "name": "riichi", "han": 1 }, { "name": "pinfu", "han": 1 }],
   "dora": 1, "akaDora": 1, "uraDora": 0,
   "han": 4, "fu": 30,
-  "fuBreakdown": [{ "reason": "base", "fu": 20 }, { "reason": "closed ron", "fu": 10 }],
+  "fuBreakdown": [{ "reason": "base", "fu": 20 }, { "reason": "closed_ron", "fu": 10 }],
   "limit": null,
   "points": { "total": 7700, "fromDiscarder": 7700 }
 }
@@ -70,6 +70,24 @@ When several decompositions of a hand are possible, the engine returns the **hig
 ron → `{total, fromDiscarder}`; non-dealer tsumo → `{total, fromDealer, fromNonDealer}`;
 dealer tsumo → `{total, fromEachNonDealer}`. For yakuman hands `fu` is `null` and `fuBreakdown` is empty.
 Yaku ids, fu reasons and limit names are the closed vocabularies in [fixtures/hands/README.md](../fixtures/hands/README.md).
+For yakuman hands `dora`, `akaDora` and `uraDora` are `0` (dora don't count toward yakuman).
+
+The request is decoded strictly: unknown fields and trailing data are rejected. Every context field from the
+request example is accepted; missing booleans count as `false`, and at least one dora indicator is required.
+
+### Score errors
+
+Every non-200 response has the body `{"error": {"code": "<code>", "message": "<human-readable>"}}`.
+
+| Status | Code | When |
+|---|---|---|
+| 400 | `invalid_json` | Malformed JSON, unknown field, wrong type, trailing data |
+| 413 | `body_too_large` | Body over 64 KiB |
+| 400 | `invalid_hand` | Bad MPSZ, not 14 tiles, >4 copies, two red fives in a suit, winning tile not in the hand |
+| 400 | `invalid_context` | Bad wind / win type / indicator, or a contradiction: `ippatsu`/`doubleRiichi`/ura indicators without `riichi`, more ura than dora indicators, 0 or >5 dora indicators, negative `honba`, `haitei` on ron, `houtei`/`chankan` on tsumo, `chankan` with `houtei`, `rinshan` (v1), `tenhou` unless dealer tsumo without riichi, `chiihou` unless non-dealer tsumo without riichi, indicators that would make a fifth copy or second red five |
+| 422 | `not_winning_hand` | The 14 tiles don't form a winning shape |
+| 422 | `no_yaku` | Complete hand, but no reading has a yaku (dora alone don't count) |
+| 500 | `internal` | Bug |
 
 ## Testing layers
 

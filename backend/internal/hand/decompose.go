@@ -8,18 +8,18 @@ import (
 	"github.com/lukamrko/VibeRiichiMahjong/backend/internal/tile"
 )
 
-// GroupKind is the shape of a group of tiles.
-type GroupKind uint8
+// Shape is the shape of a Group: a sequence, a triplet or a pair.
+type Shape uint8
 
-// Group kinds. The order is used when sorting groups.
+// Group shapes. The order is used when sorting groups.
 const (
-	Sequence GroupKind = iota // shuntsu, e.g. 345p
-	Triplet                   // koutsu, e.g. 777s
-	Pair                      // jantou or one of the chiitoitsu pairs
+	Sequence Shape = iota // shuntsu, e.g. 345p
+	Triplet               // koutsu, e.g. 777s
+	Pair                  // jantou or one of the chiitoitsu pairs
 )
 
-func (g GroupKind) String() string {
-	switch g {
+func (s Shape) String() string {
+	switch s {
 	case Sequence:
 		return "sequence"
 	case Triplet:
@@ -27,20 +27,21 @@ func (g GroupKind) String() string {
 	case Pair:
 		return "pair"
 	default:
-		return fmt.Sprintf("GroupKind(%d)", uint8(g))
+		return fmt.Sprintf("Shape(%d)", uint8(s))
 	}
 }
 
-// Group is a sequence, triplet or pair. First is the lowest tile kind of a
-// sequence, or the tile kind of a triplet or pair.
+// Group is a sequence, triplet or pair inside a decomposition (the sets are
+// mentsu, the pair is jantou). First is the lowest tile kind of a sequence, or
+// the tile kind of a triplet or pair.
 type Group struct {
-	Kind  GroupKind
+	Shape Shape
 	First tile.Kind
 }
 
 // Contains reports whether the group holds a tile of kind k.
 func (g Group) Contains(k tile.Kind) bool {
-	switch g.Kind {
+	switch g.Shape {
 	case Sequence:
 		return k >= g.First && k <= g.First+2
 	case Triplet, Pair:
@@ -54,7 +55,7 @@ func (g Group) Contains(k tile.Kind) bool {
 func (g Group) String() string {
 	n := g.First.Number()
 	suit := g.First.Suit()
-	switch g.Kind {
+	switch g.Shape {
 	case Sequence:
 		return fmt.Sprintf("%d%d%d%s", n, n+1, n+2, suit)
 	case Triplet:
@@ -62,21 +63,8 @@ func (g Group) String() string {
 	case Pair:
 		return fmt.Sprintf("%d%d%s", n, n, suit)
 	default:
-		return fmt.Sprintf("Group(%d,%s)", uint8(g.Kind), g.First)
+		return fmt.Sprintf("Group(%d,%s)", uint8(g.Shape), g.First)
 	}
-}
-
-func compareGroups(a, b Group) int {
-	if a.Kind == Pair && b.Kind != Pair {
-		return 1
-	}
-	if b.Kind == Pair && a.Kind != Pair {
-		return -1
-	}
-	if a.First != b.First {
-		return int(a.First) - int(b.First)
-	}
-	return int(a.Kind) - int(b.Kind)
 }
 
 // Form is the overall shape of a winning hand.
@@ -169,7 +157,7 @@ func (d Decomposition) String() string {
 // Decompositions returns every reading of the hand as a winning hand, sorted by
 // String and without duplicates. It returns nil if the hand is not complete.
 func (h Hand) Decompositions() []Decomposition {
-	win := h.winning.Kind
+	win := h.winning.Kind()
 	var out []Decomposition
 	for _, groups := range standardSplits(h.counts) {
 		for i, g := range groups {
@@ -195,7 +183,7 @@ func (h Hand) Decompositions() []Decomposition {
 
 // waitOf classifies the wait for the winning tile kind inside group g.
 func waitOf(g Group, win tile.Kind) Wait {
-	switch g.Kind {
+	switch g.Shape {
 	case Pair:
 		return Tanki
 	case Triplet:
@@ -212,7 +200,7 @@ func waitOf(g Group, win tile.Kind) Wait {
 			return Ryanmen
 		}
 	default:
-		panic(fmt.Sprintf("hand: unknown group kind %d", g.Kind))
+		panic(fmt.Sprintf("hand: unknown group shape %d", g.Shape))
 	}
 }
 
@@ -227,7 +215,7 @@ func standardSplits(counts [tile.NumKinds]int) [][]Group {
 		c := counts
 		c[k] -= 2
 		splitSets(&c, 0, nil, func(sets []Group) {
-			groups := append(slices.Clone(sets), Group{Kind: Pair, First: k})
+			groups := append(slices.Clone(sets), Group{Shape: Pair, First: k})
 			out = append(out, groups)
 		})
 	}
@@ -247,14 +235,14 @@ func splitSets(c *[tile.NumKinds]int, from tile.Kind, sets []Group, emit func([]
 	}
 	if c[k] >= 3 {
 		c[k] -= 3
-		splitSets(c, k, append(sets, Group{Kind: Triplet, First: k}), emit)
+		splitSets(c, k, append(sets, Group{Shape: Triplet, First: k}), emit)
 		c[k] += 3
 	}
 	if !k.IsHonor() && k.Number() <= 7 && c[k+1] > 0 && c[k+2] > 0 {
 		c[k]--
 		c[k+1]--
 		c[k+2]--
-		splitSets(c, k, append(sets, Group{Kind: Sequence, First: k}), emit)
+		splitSets(c, k, append(sets, Group{Shape: Sequence, First: k}), emit)
 		c[k]++
 		c[k+1]++
 		c[k+2]++
@@ -269,7 +257,7 @@ func chiitoitsuPairs(counts [tile.NumKinds]int) ([]Group, bool) {
 		switch c {
 		case 0:
 		case 2:
-			pairs = append(pairs, Group{Kind: Pair, First: tile.Kind(k)})
+			pairs = append(pairs, Group{Shape: Pair, First: tile.Kind(k)})
 		default:
 			return nil, false
 		}
@@ -294,7 +282,7 @@ func kokushiPair(counts [tile.NumKinds]int) (Group, bool) {
 		case c == 1:
 		case c == 2:
 			pairs++
-			pair = Group{Kind: Pair, First: kind}
+			pair = Group{Shape: Pair, First: kind}
 		default:
 			return Group{}, false
 		}
